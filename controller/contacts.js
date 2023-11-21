@@ -1,5 +1,5 @@
 const service = require("../service");
-// const service = require("../models/contacts");
+
 
 const Joi = require("joi");
 
@@ -16,7 +16,7 @@ const schema = Joi.object({
     tlds: { allow: ["com", "pl", "gov", "net"] },
   }),
 });
-// konfiguracja joi do sprawdzenia favorite
+
 const checkFavorite = Joi.object({
   favorite: Joi.bool(),
 });
