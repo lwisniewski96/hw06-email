@@ -2,6 +2,9 @@ const express = require("express");
 const router = express.Router();
 const contactsTasks = require("../controller/contacts");
 const { bodyValidate } = require("../middlewares/Validate");
+const {
+  createContactSchema,
+} = require("../Validators/createContactsValidator");
 
 router.get("/", contactsTasks.listContacts);
 

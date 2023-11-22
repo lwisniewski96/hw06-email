@@ -10,4 +10,4 @@ const schema = Joi.object({
   }),
 });
 
-export { schema };
+module.exports = { schema };

@@ -1,4 +1,3 @@
-
 export const bodyValidate = (validator) => {
   return async function (req, res, next) {
     const resultValidate = validator.validate(req.body);
@@ -11,3 +10,5 @@ export const bodyValidate = (validator) => {
     return next();
   };
 };
+
+module.exports = { bodyValidate };

@@ -1,8 +1,8 @@
 const listContacts = require("./indexContacts");
 const getContactById = require("./showContacts");
-const createContact = require("./createContact");
-const updateContact = require("./updateContact");
-const deleteContact = require("./deleteContact");
+const createContact = require("./createContacts");
+const updateContact = require("./updateContacts");
+const deleteContact = require("./deleteContacts");
 
 const service = require("../service");
 const {
@@ -16,5 +16,4 @@ module.exports = {
   createContact,
   updateContact,
   deleteContact,
-  updateStatusContact,
 };
