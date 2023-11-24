@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const { createContact, listContacts } = require("../service");
+const { createContact, listContacts } = require("../services");
 const {
   createContactSchema,
-} = require("../Validators/createContactsValidator");
+} = require("../validators/createContactsValidator");
 
 router.post("/", async (req, res, next) => {
   const body = req.body;

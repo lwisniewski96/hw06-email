@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const { updateContact } = require("../service");
-const { schema } = require("../Validators/updateContactsValidator");
+const { updateContact } = require("../services");
+const { schema } = require("../validators/updateContactsValidator");
 
 router.put("/:contactId", async (req, res, next) => {
   const { contactId } = req.params;

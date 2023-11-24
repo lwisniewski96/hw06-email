@@ -1,10 +1,20 @@
 const express = require("express");
 const router = express.Router();
-const contactsTasks = require("../controller/contacts");
-const { bodyValidate } = require("../middlewares/Validate");
+const contactsTasks = require("../controllers/contacts");
+const { bodyValidate } = require("../middlewares/validate");
 const {
   createContactSchema,
-} = require("../Validators/createContactsValidator");
+} = require("../validators/createContactsValidator");
+
+const {
+  updateContactsSchema,
+} = require("../validators/updateContactsValidator");
+
+const { paramsValidate } = require("../middlewares/validateParams");
+
+const {
+  deleteContactsSchema,
+} = require("../validators/deleteContactsValidator");
 
 router.get("/", contactsTasks.listContacts);
 
@@ -18,20 +28,14 @@ router.post(
 
 router.put(
   "/:contactId",
-  bodyValidate(updateContactSchema),
+  bodyValidate(updateContactsSchema),
   contactsTasks.updateContact
 );
 
 router.delete(
   "/:contactId",
-  bodyValidate(deleteContactSchema),
-  contactsTasks.removeContact
-);
-
-router.patch(
-  "/:contactId/favorite",
-  bodyValidate(updateStatusContactSchema),
-  contactsTasks.updateStatusContact
+  paramsValidate(deleteContactsSchema),
+  contactsTasks.deleteContact
 );
 
 module.exports = router;

@@ -14,6 +14,9 @@ app.use(cors());
 const contactsRouter = require("./api/index");
 app.use("/api/contacts", contactsRouter);
 
+const usersRouter = require("./api/users");
+app.use("/api/users", usersRouter);
+
 app.use((_, res, __) => {
   res.status(404).json({
     status: "error",

@@ -1,7 +1,7 @@
 const Joi = require("joi");
 
-const updateContactsSchema = Joi.object({
-  name: Joi.string().min(3).max(30),
+const deleteContactsSchema = Joi.object({
+  contactId: Joi.string().min(18).max(35).required(),
   phone: Joi.string().pattern(/[0-9]{9}/),
   favorite: Joi.bool(),
   email: Joi.string().email({
@@ -10,4 +10,6 @@ const updateContactsSchema = Joi.object({
   }),
 });
 
-module.exports = { updateContactsSchema };
+module.exports = {
+  deleteContactsSchema,
+};

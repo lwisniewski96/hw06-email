@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { removeContact } = require("../service");
+const { removeContact } = require("../services");
 
 router.delete("/:contactId", async (req, res, next) => {
   const { contactId } = req.params;

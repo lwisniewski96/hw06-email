@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { getContactById } = require("../service");
+const { getContactById } = require("../services");
 
 router.get("/:contactId", async (req, res, next) => {
   const { contactId } = req.params;
