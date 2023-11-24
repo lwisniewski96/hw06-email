@@ -2,6 +2,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../services/schemas/user");
 const Joi = require("joi");
+const gravatar = require("gravatar");
 
 const login = async (req, res, next) => {
   const { email, password } = req.body;
@@ -46,6 +47,8 @@ const login = async (req, res, next) => {
   }
 };
 
+// controllers/users.js
+
 const signup = async (req, res, next) => {
   try {
     const { email, password } = req.body;
@@ -65,7 +68,14 @@ const signup = async (req, res, next) => {
       return res.status(409).json({ message: "Email in use" });
     }
 
-    const newUser = new User({ email, password });
+    //  odnośnik do avatara
+    const avatarURL = gravatar.url(email, { s: "250", d: "retro" }, true);
+
+    const newUser = new User({
+      email,
+      password,
+      avatarURL,
+    });
 
     const salt = await bcrypt.genSalt(10);
     newUser.password = await bcrypt.hash(newUser.password, salt);
@@ -78,6 +88,7 @@ const signup = async (req, res, next) => {
       user: {
         email: newUser.email,
         subscription: newUser.subscription,
+        avatarURL: newUser.avatarURL,
       },
     });
   } catch (error) {
