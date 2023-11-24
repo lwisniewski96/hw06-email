@@ -47,8 +47,6 @@ const login = async (req, res, next) => {
   }
 };
 
-// controllers/users.js
-
 const signup = async (req, res, next) => {
   try {
     const { email, password } = req.body;
@@ -68,13 +66,13 @@ const signup = async (req, res, next) => {
       return res.status(409).json({ message: "Email in use" });
     }
 
-    //  odnośnik do avatara
+    // Generowanie URL-a avatara przy użyciu Gravatara
     const avatarURL = gravatar.url(email, { s: "250", d: "retro" }, true);
 
     const newUser = new User({
       email,
       password,
-      avatarURL,
+      avatarURL, 
     });
 
     const salt = await bcrypt.genSalt(10);
