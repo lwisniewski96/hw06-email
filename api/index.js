@@ -38,4 +38,9 @@ router.delete(
   contactsTasks.deleteContact
 );
 
+
+
+// HW04-AVATARS
+
+
 module.exports = router;
