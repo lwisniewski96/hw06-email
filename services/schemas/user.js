@@ -25,13 +25,21 @@ const userSchema = new Schema({
   avatarURL: {
     type: String,
   },
+  verify: {
+    type: Boolean,
+    default: false,
+  },
+  verificationToken: {
+    type: String,
+    required: [true, "Verify token is required"],
+  },
   owner: {
     type: Schema.Types.ObjectId,
     ref: "user",
   },
 });
 
-// Dodanie middleware dla solenia haseł przed zapisem do bazy danych
+
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) {
     return next();
@@ -41,24 +49,9 @@ userSchema.pre("save", async function (next) {
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);
 
-    // Dodanie generowania avatarURL na podstawie adresu e-mail
+ 
     this.avatarURL = gravatar.url(this.email, { s: "250", d: "retro" }, true);
 
-    next();
-  } catch (error) {
-    next(error);
-  }
-});
-
-// Dodanie middleware dla solenia haseł przed zapisem do bazy danych
-userSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) {
-    return next();
-  }
-
-  try {
-    const salt = await bcrypt.genSalt(10);
-    this.password = await bcrypt.hash(this.password, salt);
     next();
   } catch (error) {
     next(error);

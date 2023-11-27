@@ -72,7 +72,7 @@ const signup = async (req, res, next) => {
     const newUser = new User({
       email,
       password,
-      avatarURL, 
+      avatarURL,
     });
 
     const salt = await bcrypt.genSalt(10);
@@ -122,4 +122,24 @@ const logout = async (req, res, next) => {
   }
 };
 
-module.exports = { login, current, signup, logout };
+const verifyUser = async (req, res, next) => {
+  try {
+    const { verificationToken } = req.params;
+
+    const user = await User.findOne({ verificationToken });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    user.verificationToken = null;
+    user.verify = true;
+    await user.save();
+
+    res.status(200).json({ message: "Verification successful" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { login, current, signup, logout, verifyUser };

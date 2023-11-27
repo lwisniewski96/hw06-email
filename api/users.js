@@ -7,6 +7,8 @@ router.post("/signup", usersController.signup);
 
 router.post("/login", usersController.login);
 
+router.get("/verify/:verificationToken", usersController.verifyUser);
+
 router.use(authenticate);
 
 router.get("/logout", usersController.logout);
