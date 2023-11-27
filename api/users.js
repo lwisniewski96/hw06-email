@@ -15,4 +15,6 @@ router.get("/logout", usersController.logout);
 
 router.get("/current", usersController.current);
 
+router.post("/verify", usersController.resendVerificationEmail);
+
 module.exports = router;

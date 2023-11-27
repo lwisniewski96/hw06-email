@@ -3,6 +3,12 @@ const jwt = require("jsonwebtoken");
 const User = require("../services/schemas/user");
 const Joi = require("joi");
 const gravatar = require("gravatar");
+const nodemailer = require("nodemailer");
+
+const generateNewVerificationToken = () => {
+  const { v4: uuidv4 } = require("uuid");
+  return uuidv4();
+};
 
 const login = async (req, res, next) => {
   const { email, password } = req.body;
@@ -141,5 +147,82 @@ const verifyUser = async (req, res, next) => {
     next(error);
   }
 };
+// Nowa funkcja do wysyłania emaila z verificationToken
+const sendVerificationEmail = async (email, verificationToken) => {
+  // Konfiguracja transportera nodemailera
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASSWORD,
+    },
+  });
 
-module.exports = { login, current, signup, logout, verifyUser };
+  // Ustawienia treści wiadomości
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: email,
+    subject: "Verification Email",
+    text: `Click the following link to verify your email: http://your_api_base_url/users/verify/${verificationToken}`,
+  };
+
+  // Wysłanie emaila
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.error(error);
+    } else {
+      console.log("Email sent: " + info.response);
+    }
+  });
+};
+
+// Nowa funkcja do ponownego wysyłania emaila z verificationToken
+const resendVerificationEmail = async (req, res, next) => {
+  try {
+    const { email } = req.body;
+
+    const schema = Joi.object({
+      email: Joi.string().email().required(),
+    });
+
+    const { error } = schema.validate({ email });
+    if (error) {
+      return res.status(400).json({ message: "Missing required field email" });
+    }
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if (user.verify) {
+      return res
+        .status(400)
+        .json({ message: "Verification has already been passed" });
+    }
+
+    // Generowanie nowego verificationToken
+    const newVerificationToken = generateNewVerificationToken();
+
+    // Aktualizacja verificationToken w bazie danych
+    user.verificationToken = newVerificationToken;
+    await user.save();
+
+    // Wysłanie emaila z nowym verificationToken
+    sendVerificationEmail(email, newVerificationToken);
+
+    res.status(200).json({ message: "Verification email sent" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = {
+  login,
+  current,
+  signup,
+  logout,
+  verifyUser,
+  resendVerificationEmail,
+};
